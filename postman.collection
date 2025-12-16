@@ -1,95 +1,27 @@
 {
-  "info": {
-    "name": "testSpring API",
-    "_postman_id": "d5c5a5a0-1111-4f9e-b111-111111111111",
-    "version": "1.0.0",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  "livreur": {
+    "nomLivreur": "Mohamed",
+    "prenomLivreur": "SALAH"
   },
-  "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080/api" },
-    { "key": "clientId", "value": "1" },
-    { "key": "referenceColis", "value": "C1" }
-  ],
-  "item": [
+  "refColis": ["C1", "C5"]
+}
+
+{
+  "referenceColis": "C2",
+  "prixCommande": 50,
+  "dateLivraison": "2025-01-02",
+  "etatColis": "EN_COURS",
+  "client": {
+    "idClient": 1
+  },
+  "produits": [
     {
-      "name": "Ajouter Client",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": { "raw": "{{baseUrl}}/AjouterClient", "host": ["{{baseUrl}}"], "path": ["AjouterClient"] },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nomClient\": \"Ali\",\n  \"numTel\": \"22123222\"\n}"
-        }
-      }
+      "identifiant": "N01",
+      "categorieProd": "NOURRITURE"
     },
     {
-      "name": "Ajouter Colis & Affecter à Client",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": { "raw": "{{baseUrl}}/AjouterColis/{{clientId}}", "host": ["{{baseUrl}}"], "path": ["AjouterColis", "{{clientId}}"] },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"referenceColis\": \"C1\",\n  \"prixCommande\": 250,\n  \"dateLivraison\": \"2024-11-15\",\n  \"etatColis\": \"EN_ATTENTE\",\n  \"produits\": [\n    { \"identifiant\": \"V03\", \"categorieProd\": \"VETEMENTS\" },\n    { \"identifiant\": \"S02\", \"categorieProd\": \"SOINS\" }\n  ]\n}"
-        }
-      }
-    },
-    {
-      "name": "Ajouter Livreur & Affecter Colis",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "url": {
-          "raw": "{{baseUrl}}/AjouterLivreur?refColis=C1&refColis=C2",
-          "host": ["{{baseUrl}}"],
-          "path": ["AjouterLivreur"],
-          "query": [
-            { "key": "refColis", "value": "C1" },
-            { "key": "refColis", "value": "C2" }
-          ]
-        },
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"nomLivreur\": \"HAMDI\",\n  \"prenomLivreur\": \"Mohamed\"\n}"
-        }
-      }
-    },
-    {
-      "name": "Mettre à jour et afficher colis (manual trigger)",
-      "request": {
-        "method": "PUT",
-        "url": { "raw": "{{baseUrl}}/colis/etat", "host": ["{{baseUrl}}"], "path": ["colis", "etat"] }
-      }
-    },
-    {
-      "name": "Afficher Clients (VETEMENTS after 2024-11-01)",
-      "request": {
-        "method": "GET",
-        "url": {
-          "raw": "{{baseUrl}}/clients?categorie=VETEMENTS&dateLivraison=2024-11-01",
-          "host": ["{{baseUrl}}"],
-          "path": ["clients"],
-          "query": [
-            { "key": "categorie", "value": "VETEMENTS" },
-            { "key": "dateLivraison", "value": "2024-11-01" }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Montant à payer par référence",
-      "request": {
-        "method": "GET",
-        "url": { "raw": "{{baseUrl}}/colis/{{referenceColis}}/montant", "host": ["{{baseUrl}}"], "path": ["colis", "{{referenceColis}}", "montant"] }
-      }
-    },
-    {
-      "name": "Client fidèle",
-      "request": {
-        "method": "GET",
-        "url": { "raw": "{{baseUrl}}/clients/fidele", "host": ["{{baseUrl}}"], "path": ["clients", "fidele"] }
-      }
+        "identifiant": "N02",
+      "categorieProd": "NOURRITURE"
     }
   ]
 }

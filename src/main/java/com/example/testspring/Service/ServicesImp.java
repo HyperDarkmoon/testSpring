@@ -50,7 +50,6 @@ public class ServicesImp implements ServicesInterfaces {
 		Client client = clientRepo.findById(idClient)
 			.orElseThrow(() -> new IllegalArgumentException("Client introuvable pour id=" + idClient));
 
-		// Persist produits first and maintain both sides of the relation
 		Set<Produit> produits = c.getProduits() == null ? new HashSet<>() : new HashSet<>(c.getProduits());
 		Set<Produit> managedProduits = new HashSet<>();
 		for (Produit p : produits) {
@@ -64,7 +63,6 @@ public class ServicesImp implements ServicesInterfaces {
 
 		Colis savedColis = colisRepo.save(c);
 
-		// Maintain bidirectional list on client
 		List<Colis> clientColis = client.getColis();
 		if (clientColis == null) {
 			clientColis = new ArrayList<>();
@@ -132,9 +130,45 @@ public class ServicesImp implements ServicesInterfaces {
 	@Override
 	public Client clientFidele() {
 		return clientRepo.findAll().stream()
-				.max((c1, c2) -> Integer.compare(
-						c1.getColis() == null ? 0 : c1.getColis().size(),
-						c2.getColis() == null ? 0 : c2.getColis().size()))
+				.max((c1, c2) -> compareFidelite(c1, c2))
 				.orElse(null);
+	}
+
+	private int compareFidelite(Client c1, Client c2) {
+		LoyaltyScore s1 = score(c1);
+		LoyaltyScore s2 = score(c2);
+		if (s1.count != s2.count) {
+			return Integer.compare(s1.count, s2.count);
+		}
+		return Float.compare(s1.total, s2.total);
+	}
+
+	private LoyaltyScore score(Client client) {
+		if (client == null || client.getColis() == null) {
+			return new LoyaltyScore(0, 0f);
+		}
+		int count = 0;
+		float total = 0f;
+		for (Colis colis : client.getColis()) {
+			if (colis == null || colis.getEtatColis() == Etat.ANNULE) {
+				continue;
+			}
+			LocalDate date = colis.getDateLivraison();
+			if (date != null && date.getYear() == 2024) {
+				count++;
+				Float prix = colis.getPrixCommande();
+				total += prix == null ? 0f : prix;
+			}
+		}
+		return new LoyaltyScore(count, total);
+	}
+
+	private static class LoyaltyScore {
+		final int count;
+		final float total;
+		LoyaltyScore(int count, float total) {
+			this.count = count;
+			this.total = total;
+		}
 	}
 }
