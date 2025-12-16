@@ -1,5 +1,8 @@
 package com.example.testspring.Repository;
 
-public class ProduitRepo {
-    
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.testspring.Entity.Produit;
+
+public interface ProduitRepo extends JpaRepository<Produit, Long> {
 }
