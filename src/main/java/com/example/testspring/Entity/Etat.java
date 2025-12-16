@@ -1,5 +1,7 @@
 package com.example.testspring.Entity;
 
-public class Etat {
-    
+public enum Etat {
+	EN_ATTENTE,
+	EN_COURS,
+	ANNULE
 }

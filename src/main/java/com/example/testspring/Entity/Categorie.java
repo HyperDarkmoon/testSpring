@@ -1,5 +1,8 @@
 package com.example.testspring.Entity;
 
-public class Categorie {
-    
+public enum Categorie {
+	NOURRITURE,
+	COURSES,
+	SOINS,
+	VETEMENTS
 }
