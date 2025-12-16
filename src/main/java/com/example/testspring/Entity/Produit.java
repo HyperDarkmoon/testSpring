@@ -3,6 +3,8 @@ package com.example.testspring.Entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,6 +26,7 @@ public class Produit {
 	private Categorie categorieProd;
 
 	@ManyToMany(mappedBy = "produits")
+	@JsonIgnore
 	private Set<Colis> colis = new HashSet<>();
 
 	public Produit() {
