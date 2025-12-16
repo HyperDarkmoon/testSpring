@@ -11,5 +11,5 @@ import com.example.testspring.Entity.Colis;
 
 public interface ColisRepo extends JpaRepository<Colis, Long> {
 	Optional<Colis> findByReferenceColis(String referenceColis);
-	List<Colis> findByProduits_CategorieProdAndDateLivraison(Categorie categorieProd, LocalDate dateLivraison);
+	List<Colis> findByProduits_CategorieProdAndDateLivraisonAfter(Categorie categorieProd, LocalDate dateLivraison);
 }

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.example.testspring.Entity.Categorie;
 import com.example.testspring.Entity.Client;
@@ -93,12 +94,13 @@ public class ServicesImp implements ServicesInterfaces {
 	}
 
 	@Override
+	@Scheduled(fixedRate = 20000)
 	public void mettreAJourEtAfficherColis() {
 		List<Colis> colisList = colisRepo.findAll();
 		LocalDate today = LocalDate.now();
 		for (Colis colis : colisList) {
-			if (colis.getEtatColis() == Etat.EN_ATTENTE && colis.getDateLivraison() != null
-					&& colis.getDateLivraison().isBefore(today)) {
+			if (colis.getEtatColis() == Etat.EN_ATTENTE && colis.getLivreur() != null
+					&& colis.getDateLivraison() != null && colis.getDateLivraison().isBefore(today)) {
 				colis.setEtatColis(Etat.EN_COURS);
 				colisRepo.save(colis);
 			}
@@ -108,7 +110,7 @@ public class ServicesImp implements ServicesInterfaces {
 
 	@Override
 	public List<Client> afficherClients(Categorie cateGorieProd, LocalDate dateLivraison) {
-		List<Colis> colis = colisRepo.findByProduits_CategorieProdAndDateLivraison(cateGorieProd, dateLivraison);
+		List<Colis> colis = colisRepo.findByProduits_CategorieProdAndDateLivraisonAfter(cateGorieProd, dateLivraison);
 		return colis.stream()
 				.map(Colis::getClient)
 				.filter(Objects::nonNull)
@@ -119,7 +121,11 @@ public class ServicesImp implements ServicesInterfaces {
 	@Override
 	public float montantAPayerParClient(String referenceColis) {
 		return colisRepo.findByReferenceColis(referenceColis)
-				.map(Colis::getPrixCommande)
+				.map(colis -> {
+					float prix = colis.getPrixCommande() == null ? 0f : colis.getPrixCommande();
+					float frais = prix > 100f ? 0f : 8f;
+					return prix + frais;
+				})
 				.orElse(0f);
 	}
 
